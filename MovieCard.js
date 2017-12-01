@@ -1,46 +1,59 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import {Card, CardItem, Left, Body, Text, Icon} from 'native-base'
+import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { Card, CardItem, Left, Body, Text, Icon, Right } from 'native-base'
+import {
+    RkCard,
+    RkText,
+    RkStyleSheet
+} from 'react-native-ui-kitten';
 
 const image_path = 'https://image.tmdb.org/t/p/w500';
 // create a component
 class MovieCard extends Component {
     render() {
-        const { movie } = this.props;
+        const { movie, loadDetail } = this.props;
+        const image = {
+            uri: image_path.concat(movie.poster_path)
+        }
         return (
-            <Card>
-                <CardItem>
-                    <Left>
-                        <Body>
-                            <Text style={{fontWeight: 'bold'}}>{movie.title}</Text>
-                            <Text note>{movie.release_date.split('-')[0]}</Text>
-                        </Body>
-                    </Left>
-                </CardItem>
-                <CardItem cardBody>
-                    <Image source={{ uri: image_path.concat(movie.poster_path)}} resizeMethod='scale' resizeMode='cover' style={{height: 300, width: null, flex: 1}}/>
-                </CardItem>
-                <CardItem>
-                    <Left>
-                        <Icon name="star"/>
-                        <Text>{movie.vote_average}</Text>
-                    </Left>
-                </CardItem>
-            </Card>
+            <TouchableOpacity onPress={loadDetail}
+                delayPressIn={70}
+                activeOpacity={0.8}>
+
+                <RkCard style={styles.card} style={styles.image}>
+                    <Image rkCardImg source={image} />
+                    <View style={styles.footer} rkCardFooter>
+                        <View>
+                            <RkText rkType='header2' color='#ffffff'>{movie.title}</RkText>
+                            <RkText rkType='secondary2 hintColor'>{movie.release_date}</RkText>
+                        </View>
+                    </View >
+                </RkCard>
+
+            </TouchableOpacity>
         );
     }
 }
 
-// define your styles
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#2c3e50',
+
+let styles = RkStyleSheet.create(theme => ({
+    card: {
+        marginVertical: 8
     },
-});
+    footer: {
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        position: 'absolute',
+        bottom: 0,
+        paddingTop: 16,
+    },
+    time: {
+        marginTop: 5
+    },
+    image:{
+        height: 500
+    }
+}));
 
 //make this component available to the app
 export default MovieCard;
