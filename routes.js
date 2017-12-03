@@ -3,19 +3,19 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { StackNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'
 import { Icon } from 'native-base'
-import MovieList from './MovieList'
-import DiscoverMovie from './discover'
+import Movies from './movies'
+import TvShows from './tvshows'
 import MovieDetail from './MovieDetail'
 
 export const MovieTabs = TabNavigator({
     NowPlaying: {
-        screen: MovieList,
+        screen: Movies,
         navigationOptions: {
             tabBarLabel: 'movies',
         }
     },
-    Discover: {
-        screen: DiscoverMovie,
+    TvShows: {
+        screen: TvShows,
         navigationOptions: {
             tabBarLabel: 'Tv Shows',
         }
@@ -46,21 +46,21 @@ export const StackRoute = StackNavigator({
         screen: MovieDetail,
         navigationOptions: ({ navigation }) =>
             ({
-                title: `${navigation.state.params.title}`
+                title: `${navigation.state.params.movie.title}`
             })
     }
 })
 
 export const Drawer = DrawerNavigator({
-    Home: {
+    Movies: {
         screen: StackRoute,
         path: '/'
     },
-    Discover: {
-        screen: DiscoverMovie,
-        path: '/discover'
+    TvShows: {
+        screen: TvShows,
+        path: '/tvshows'
     }
 }, {
-        initialRouteName: 'Home',
+        initialRouteName: 'Movies',
         drawerPosition: 'left'
     })

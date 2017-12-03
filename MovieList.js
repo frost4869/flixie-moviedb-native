@@ -8,17 +8,14 @@ class MovieList extends Component {
 
     render() {
 
-        const screenProps = this.props.screenProps;
-        const { movies, handleRefresh, loading, handleLoadmore, isRefreshing } = screenProps;
-
-        const navigate = this.props.navigation.navigate;
+        const { movies, handleRefresh, loading, handleLoadmore, isRefreshing, navigate, type } = this.props;
 
         return (
             <FlatList
                 data={movies}
                 keyExtractor={(movie) => movie.id}
-                renderItem={(movie) => <MovieCard movie={movie.item} loadDetail={() => {
-                    navigate("MovieDetail", movie.item)
+                renderItem={(movie) => <MovieCard movie={movie.item} type={type} loadDetail={() => {
+                    navigate("MovieDetail", { movie: movie.item, type: type })
                 }} />}
                 onRefresh={handleRefresh}
                 refreshing={isRefreshing}
@@ -30,8 +27,7 @@ class MovieList extends Component {
                     } else {
                         return null
                     }
-                }
-                }>
+                }}>
             </FlatList>
         );
     }

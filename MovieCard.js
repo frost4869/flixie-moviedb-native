@@ -1,7 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
-import { Card, CardItem, Left, Body, Text, Icon, Right } from 'native-base'
 import {
     RkCard,
     RkText,
@@ -12,10 +11,18 @@ const image_path = 'https://image.tmdb.org/t/p/w500';
 // create a component
 class MovieCard extends Component {
     render() {
-        const { movie, loadDetail } = this.props;
+        const { movie, loadDetail, type } = this.props;
         const image = {
             uri: image_path.concat(movie.poster_path)
         }
+
+        let movieObj = {
+            title: type === 'movie' ? movie.title : movie.name,
+            rate: movie.vote_average,
+            overview: movie.overview,
+            date: type === 'movie' ? movie.release_date.split('-')[0] : movie.first_air_date.split('-')[0]
+        }
+
         return (
             <TouchableOpacity onPress={loadDetail}
                 delayPressIn={70}
@@ -24,9 +31,9 @@ class MovieCard extends Component {
                 <RkCard style={styles.card} style={styles.image}>
                     <Image rkCardImg source={image} />
                     <View style={styles.footer} rkCardFooter>
-                        <View>
-                            <RkText rkType='header2' color='#ffffff'>{movie.title}</RkText>
-                            <RkText rkType='secondary2 hintColor'>{movie.release_date}</RkText>
+                        <View >
+                            <RkText style={styles.title}>{movieObj.title}</RkText>
+                            <RkText style={styles.time}>{movieObj.date}</RkText>
                         </View>
                     </View >
                 </RkCard>
@@ -45,14 +52,24 @@ let styles = RkStyleSheet.create(theme => ({
         backgroundColor: 'rgba(0,0,0,0.4)',
         position: 'absolute',
         bottom: 0,
-        paddingTop: 16,
+        left: 0,
+        right: 0
     },
     time: {
         marginTop: 5
     },
     image:{
-        height: 500
-    }
+        height: 500,
+        
+    },
+    title: {
+        color: 'rgb(200, 200, 200)',
+        fontSize: 18,
+        fontWeight: '600'
+    },
+    time: {
+        color: 'rgb(200, 200, 200)'
+    },
 }));
 
 //make this component available to the app
