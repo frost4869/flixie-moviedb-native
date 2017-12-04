@@ -1,22 +1,120 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
-import { RkText, RkStyleSheet } from 'react-native-ui-kitten';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
+import { RkStyleSheet } from 'react-native-ui-kitten';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
+import { Badge, H3 } from 'native-base';
+import MovieReviewsList from './movie-reviews-list';
 
 const image_path = 'https://image.tmdb.org/t/p/w780';
+const api_key = '09e4cc13c99312bf18cad8339e83bc82';
+const lang = 'en-US';
 
 // create a component
 class MovieDetail extends Component {
-    render() {
-        const { movie, type } = this.props.navigation.state.params;
-        let movieObj = {
-            title: type === 'movie' ? movie.title : movie.name,
-            rate: movie.vote_average,
-            overview: movie.overview,
-            date: type === 'movie' ? movie.release_date.split('-')[0] : movie.first_air_date.split('-')[0],
-            backdrop_path: movie.backdrop_path
+
+    constructor(props) {
+        super(props);
+
+        this.movie = this.props.navigation.state.params.movie;
+        this.type = this.props.navigation.state.params.type;
+
+        this.state = {
+            movie: {},
+            loading: true,
         }
+    }
+
+    async fetchDetails(type, id) {
+        const details_api = `https://api.themoviedb.org/3/${type}/${id}?api_key=${api_key}&language=${lang}`;
+        let data = await fetch(details_api);
+        let result = await data.json();
+
+        return result;
+    }
+
+    async componentWillMount() {
+        await this.fetchDetails(this.type, this.movie.id).then((details) => {
+            this.setState({
+                movie: details,
+                loading: false
+            })
+        })
+    }
+
+    render() {
+        let movieObj = {
+            title: this.type === 'movie' ? this.movie.title : this.movie.name,
+            rate: this.movie.vote_average,
+            overview: this.movie.overview,
+            date: this.type === 'movie' ? this.movie.release_date : this.movie.first_air_date,
+            backdrop_path: this.movie.backdrop_path,
+        }
+
+        let Content = (props) => {
+            if (!this.state.loading) {
+                return (
+                    <View>
+                        <View style={styles.border}>
+                            <View style={[styles.info]}>
+                                <Text>
+                                    <FontAwesome >
+                                        {Icons.calendar + '   '}
+                                    </FontAwesome>
+                                    {movieObj.date}
+                                </Text>
+                                <Text>
+                                    <FontAwesome >
+                                        {Icons.tags + '   '}
+                                    </FontAwesome>
+                                    {this.state.movie.genres.map((genre) => genre.name + "  ")}
+                                </Text>
+                                <Text>
+                                    <FontAwesome >
+                                        {Icons.thumbsOUp + '   '}
+                                    </FontAwesome>
+                                    {movieObj.rate}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={[styles.headerView]}>
+                            <H3 style={[styles.headerText]}>Overview</H3>
+                        </View>
+                        <View style={styles.border}>
+                            <View style={styles.info}>
+                                <Text style={styles.tagline}>
+                                    {this.type === 'movie' ? this.state.movie.tagline : ''}
+                                </Text>
+                                <Text>{movieObj.overview}</Text>
+                            </View>
+                        </View>
+                        <Reviews />
+                    </View>
+                )
+            } else {
+                return <ActivityIndicator size="large" />;
+            }
+        }
+
+        let Reviews = () => {
+            if (this.type === 'movie') {
+                return (
+                    <View>
+                        <View style={[styles.headerView]}>
+                            <H3 style={[styles.headerText]}>Reviews</H3>
+                        </View>
+                        <View style={styles.border}>
+                            <View style={styles.info}>
+                                <MovieReviewsList movieId={this.movie.id} />
+                            </View>
+                        </View>
+                    </View>
+                )
+            } else {
+                return null
+            }
+        }
+
         return (
             <ScrollView>
                 <View style={[styles.header, styles.border]}>
@@ -25,15 +123,9 @@ class MovieDetail extends Component {
                         style={styles.image} />
                     <View style={styles.title_background}>
                         <Text style={styles.title}>{movieObj.title}</Text>
-                        <Text style={styles.rate}>
-                            <FontAwesome>{Icons.star}</FontAwesome>
-                            {movieObj.rate}
-                        </Text>
                     </View>
                 </View>
-                <View style={styles.border}>
-                    <Text>{movieObj.overview}</Text>
-                </View>
+                <Content />
 
             </ScrollView>
 
@@ -72,6 +164,22 @@ const styles = RkStyleSheet.create(theme => ({
     },
     rate: {
         color: '#ffffff'
+    },
+    info: {
+        margin: 16,
+    },
+    tagline: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontStyle: 'italic'
+    },
+    headerView: {
+        backgroundColor: '#c9c9c9'
+    },
+    headerText: {
+        marginLeft: 10,
+        marginTop: 5,
+        marginBottom: 5
     }
 }));
 

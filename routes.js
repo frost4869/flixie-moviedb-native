@@ -46,7 +46,11 @@ export const StackRoute = StackNavigator({
         screen: MovieDetail,
         navigationOptions: ({ navigation }) =>
             ({
-                title: `${navigation.state.params.movie.title}`
+                title: `${navigation.state.params.type === 'movie' ? navigation.state.params.movie.title : navigation.state.params.movie.name}`,
+                headerStyle: {
+                    backgroundColor: '#395c93'
+                },
+                headerTintColor: '#ffffff'
             })
     }
 })
