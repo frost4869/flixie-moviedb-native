@@ -24,7 +24,8 @@ The following **optional** features are implemented:
 - [x] Customize the navigation drawer.
 
 
-## Video Walkthrough (will be updated soon)
+## Video Walkthrough 
+Link: https://photos.google.com/photo/AF1QipOnTfJI5-SGdr5Vn2XkjtHr_zUfiHyaXUWZl_RN?hl=vi
 
 
 ## License
