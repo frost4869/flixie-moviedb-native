@@ -16,7 +16,6 @@ class AppHeader extends Component {
                 <Body>
                     <Title>{this.props.title}</Title>
                 </Body>
-                <Right />
             </Header>
         );
     }

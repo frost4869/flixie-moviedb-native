@@ -8,7 +8,7 @@ class MovieList extends Component {
 
     render() {
 
-        const { movies, handleRefresh, loading, handleLoadmore, isRefreshing, navigate, type } = this.props;
+        const { movies, handleRefresh, handleLoadmore, isRefreshing, navigate, type, hasMore } = this.props;
 
         return (
             <FlatList
@@ -22,11 +22,10 @@ class MovieList extends Component {
                 onEndReached={handleLoadmore}
                 onEndReachedThreshold={0.05}
                 ListFooterComponent={() => {
-                    if (loading) {
+                    if (hasMore)
                         return <ActivityIndicator size="large" />
-                    } else {
+                    else
                         return null
-                    }
                 }}>
             </FlatList>
         );

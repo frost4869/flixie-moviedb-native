@@ -26,7 +26,7 @@ class MovieReviewsList extends Component {
         let data = await fetch(reviews_api);
         let result = await data.json();
 
-        if (result.page == result.total_pages) {
+        if (result.page == result.total_pages || result.results.length == 0) {
             this.setState({
                 hasMore: false
             })
@@ -63,23 +63,28 @@ class MovieReviewsList extends Component {
     render() {
         let Content = () => {
             if (!this.state.loading) {
-                return (
-                    <FlatList
-                        data={this.state.reviews}
-                        keyExtractor={(review) => review.id}
-                        renderItem={(review) => <MovieReview review={review.item} />}
-                        onEndReached={this.handleLoadmore}
-                        onEndReachedThreshold={0.05}
-                        ListFooterComponent={() => {
-                            if (this.state.hasMore) {
-                                return <ActivityIndicator size="large" />
-                            } else {
-                                return null
-                            }
-                        }}>
-                    </FlatList>
-                )
-            } else {
+                if (this.state.reviews.length == 0) {
+                    return <Text>No review for this film yet !</Text>
+                } else {
+                    return (
+                        <FlatList
+                            data={this.state.reviews}
+                            keyExtractor={(review) => review.id}
+                            renderItem={(review) => <MovieReview review={review.item} />}
+                            onEndReached={this.handleLoadmore}
+                            onEndReachedThreshold={0.05}
+                            ListFooterComponent={() => {
+                                if (this.state.hasMore) {
+                                    return <ActivityIndicator size="large" />
+                                } else {
+                                    return null
+                                }
+                            }}>
+                        </FlatList>
+                    )
+                }
+            }
+            else {
                 return <ActivityIndicator size="large" />
             }
         }

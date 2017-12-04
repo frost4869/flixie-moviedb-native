@@ -6,6 +6,7 @@ import { Icon } from 'native-base'
 import Movies from './movies'
 import TvShows from './tvshows'
 import MovieDetail from './MovieDetail'
+import Search from './search'
 
 export const MovieTabs = TabNavigator({
     NowPlaying: {
@@ -35,6 +36,7 @@ export const StackRoute = StackNavigator({
             ({
                 title: "Flixie",
                 headerLeft: <Icon name='menu' style={{ marginLeft: 15, color: '#ffffff' }} onPress={() => { navigation.navigate('DrawerOpen') }} />,
+                headerRight: <Icon name='search' style={{ marginRight: 15, color: '#ffffff' }} onPress={() => { navigation.navigate('Search') }}/>,
                 headerStyle: {
                     backgroundColor: '#395c93'
                 },
@@ -47,6 +49,17 @@ export const StackRoute = StackNavigator({
         navigationOptions: ({ navigation }) =>
             ({
                 title: `${navigation.state.params.type === 'movie' ? navigation.state.params.movie.title : navigation.state.params.movie.name}`,
+                headerStyle: {
+                    backgroundColor: '#395c93'
+                },
+                headerTintColor: '#ffffff'
+            })
+    },
+    Search: {
+        screen: Search,
+        navigationOptions: ({ navigation }) =>
+            ({
+                title: 'Search',
                 headerStyle: {
                     backgroundColor: '#395c93'
                 },

@@ -7,7 +7,7 @@ import MovieList from './MovieList'
 class Movies extends Component {
     render() {
         const screenProps = this.props.screenProps;
-        const { movies, handleRefresh, loading, handleLoadmore, isRefreshing } = screenProps;
+        const { movies, handleRefresh, loading, handleLoadmore, isRefreshing, hasMore } = screenProps;
         const navigate = this.props.navigation.navigate;
 
         return (
@@ -17,7 +17,8 @@ class Movies extends Component {
                 handleLoadmore={handleLoadmore}
                 isRefreshing={isRefreshing}
                 navigate={navigate}
-                type='movie'/>
+                type='movie'
+                hasMore={hasMore}/>
         );
     }
 }

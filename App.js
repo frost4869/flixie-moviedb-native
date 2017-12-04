@@ -26,6 +26,7 @@ export default class App extends React.Component {
       page: 1,
       loading: true,
       isRefreshing: false,
+      hasMore: true
     }
   }
 
@@ -53,6 +54,12 @@ export default class App extends React.Component {
     let data = await fetch(now_playing_url);
     let dataObj = await data.json();
 
+    if (dataObj.total_pages == page) {
+      this.setState({
+        hasMore: false
+      })
+    }
+
     return dataObj.results;
   }
 
@@ -72,18 +79,20 @@ export default class App extends React.Component {
   }
 
   async handleLoadmore() {
-    const page = this.state.page + 1;
-    this.setState({
-      loading: true
-    })
-
-    await this.fetchMovie(page).then((movies) => {
+    if (this.state.hasMore) {
+      const page = this.state.page + 1;
       this.setState({
-        page,
-        movies: this.state.movies.concat(movies),
-        loading: false
+        loading: true
       })
-    });
+
+      await this.fetchMovie(page).then((movies) => {
+        this.setState({
+          page,
+          movies: this.state.movies.concat(movies),
+          loading: false
+        })
+      });
+    }
   }
 
   render() {
@@ -99,7 +108,8 @@ export default class App extends React.Component {
             handleRefresh: this.handleRefresh.bind(this),
             loading: this.state.loading,
             isRefreshing: this.state.isRefreshing,
-            handleLoadmore: this.handleLoadmore.bind(this)
+            handleLoadmore: this.handleLoadmore.bind(this),
+            hasMore: this.state.hasMore
           }} />
       </Container>
     );
