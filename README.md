@@ -25,7 +25,7 @@ The following **optional** features are implemented:
 
 
 ## Video Walkthrough 
-Link: https://photos.google.com/photo/AF1QipOnTfJI5-SGdr5Vn2XkjtHr_zUfiHyaXUWZl_RN?hl=vi
+[Link](https://youtu.be/0ci4EG0q3nQ)
 
 
 ## License
