@@ -12,16 +12,16 @@ The following **required** functionality is completed:
 - [x] User can view a list of tv shows currently on air. 
 - [x] User can view movie details by tapping on a cell.
 - [x] User sees loading state while waiting for the API.
-- [ ] User sees an error message when there is a network error.
 - [x] User can pull to refresh the movie list.
 
 The following **optional** features are implemented:
 
 - [x] Add a tab bar for **Movies** and **Tv Shows**.
-- [ ] Implement control to switch between list view and grid view.
 - [x] Add a search bar.
 - [x] Customize the highlight and selection effect of the cell.
 - [x] Customize the navigation drawer.
+- [x] User can view Reviews of the Movies
+- [x] User can view the Casts of the Movies and Tv Show.
 
 
 ## Video Walkthrough 

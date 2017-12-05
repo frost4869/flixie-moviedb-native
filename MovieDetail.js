@@ -5,6 +5,7 @@ import { RkStyleSheet } from 'react-native-ui-kitten';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import { Badge, H3 } from 'native-base';
 import MovieReviewsList from './movie-reviews-list';
+import MovieCastList from './movie-cast-list';
 
 const image_path = 'https://image.tmdb.org/t/p/w780';
 const api_key = '09e4cc13c99312bf18cad8339e83bc82';
@@ -21,7 +22,9 @@ class MovieDetail extends Component {
 
         this.state = {
             movie: {},
+            casts: [],
             loading: true,
+            loading_cast: true
         }
     }
 
@@ -33,11 +36,25 @@ class MovieDetail extends Component {
         return result;
     }
 
+    async fetchCasts(){
+        const cast_api = `https://api.themoviedb.org/3/${this.type}/${this.movie.id}/credits?api_key=${api_key}`;
+        let data = await fetch(cast_api);
+        let result = await data.json();
+
+        return result.cast;
+    }
+
     async componentWillMount() {
         await this.fetchDetails(this.type, this.movie.id).then((details) => {
             this.setState({
                 movie: details,
                 loading: false
+            })
+        })
+        await this.fetchCasts().then((casts) => {
+            this.setState({
+                casts,
+                loading_cast: false
             })
         })
     }
@@ -55,6 +72,8 @@ class MovieDetail extends Component {
             if (!this.state.loading) {
                 return (
                     <View>
+
+                        {/* Movie info here */}
                         <View style={styles.border}>
                             <View style={[styles.info]}>
                                 <Text>
@@ -77,6 +96,8 @@ class MovieDetail extends Component {
                                 </Text>
                             </View>
                         </View>
+
+                        {/* Overview here */}
                         <View style={[styles.headerView]}>
                             <H3 style={[styles.headerText]}>Overview</H3>
                         </View>
@@ -88,12 +109,32 @@ class MovieDetail extends Component {
                                 <Text>{movieObj.overview}</Text>
                             </View>
                         </View>
+
+                        {/* Casts here */}
+                        <Cast/>
+
+                        {/* Reviews here if has any */}
                         <Reviews />
                     </View>
                 )
             } else {
                 return <ActivityIndicator size="large" />;
             }
+        }
+
+        let Cast = () => {
+            return (
+                    <View>
+                        <View style={[styles.headerView]}>
+                            <H3 style={[styles.headerText]}>Casts</H3>
+                        </View>
+                        <View style={styles.border}>
+                            <View style={styles.info}>
+                                <MovieCastList casts={this.state.casts} loading={this.state.loading_cast}/>
+                            </View>
+                        </View>
+                    </View>
+                )
         }
 
         let Reviews = () => {
