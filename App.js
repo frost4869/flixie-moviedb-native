@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, FlatList, ListItem, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, ListItem, StatusBar, LayoutAnimation, UIManager } from 'react-native';
 import testdata from './test.json';
 import MovieList from './MovieList.js';
 import { Expo, Font, AppLoading } from 'expo'
@@ -31,6 +31,7 @@ export default class App extends React.Component {
   }
 
   async componentWillMount() {
+    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     await Font.loadAsync({
       Roboto_font,
       Roboto_medium_font,
@@ -42,6 +43,7 @@ export default class App extends React.Component {
     });
 
     await this.fetchMovie(this.state.page).then((movies) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
       this.setState({
         movies,
         loading: false
@@ -70,6 +72,7 @@ export default class App extends React.Component {
       movies: []
     })
     await this.fetchMovie(page).then((movies) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
       this.setState({
         page,
         movies,
@@ -86,6 +89,7 @@ export default class App extends React.Component {
       })
 
       await this.fetchMovie(page).then((movies) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
         this.setState({
           page,
           movies: this.state.movies.concat(movies),

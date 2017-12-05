@@ -1,11 +1,13 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
 import {
     RkCard,
     RkText,
     RkStyleSheet
 } from 'react-native-ui-kitten';
+import Image from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
 
 const image_path = 'https://image.tmdb.org/t/p/w500';
 // create a component
@@ -29,7 +31,8 @@ class MovieCard extends Component {
                 activeOpacity={0.8}>
 
                 <RkCard style={styles.card} style={styles.image}>
-                    <Image rkCardImg source={image} />
+                    <Image rkCardImg source={image} 
+                        indicator={ProgressBar}/>
                     <View style={styles.footer} rkCardFooter>
                         <View >
                             <RkText style={styles.title}>{movieObj.title}</RkText>

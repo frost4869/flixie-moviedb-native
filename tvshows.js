@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, LayoutAnimation, UIManager } from 'react-native';
 import MovieList from './MovieList'
 
 const api_key = '09e4cc13c99312bf18cad8339e83bc82';
@@ -16,11 +16,12 @@ class TvShows extends Component {
             loading: true,
             page: 1,
             isRefreshing: false,
+            hasMore: true
         }
 
         this.handleRefresh = this.handleRefresh.bind(this)
         this.handleLoadmore = this.handleLoadmore.bind(this)
-        
+
     }
 
     async fecthTvShows(page) {
@@ -28,21 +29,31 @@ class TvShows extends Component {
         let data = await fetch(tvshow_uri);
         let result = await data.json();
 
+        if (result.total_pages == page) {
+            this.setState({
+                hasMore: false
+            })
+        }
+
         return result.results;
     }
 
     async handleLoadmore() {
-        const page = this.state.page + 1;
-        this.setState({
-            loading: true
-        })
-        await this.fecthTvShows(page).then((tvshows) => {
+        if (this.state.hasMore) {
+            const page = this.state.page + 1;
             this.setState({
-                tvshows: this.state.tvshows.concat(tvshows),
-                page,
-                loading: false
+                loading: true
             })
-        })
+            await this.fecthTvShows(page).then((tvshows) => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
+                this.setState({
+                    tvshows: this.state.tvshows.concat(tvshows),
+                    page,
+                    loading: false
+                })
+            })
+        }
     }
 
     async handleRefresh() {
@@ -52,6 +63,8 @@ class TvShows extends Component {
             isRefreshing: true
         })
         await this.fecthTvShows(page).then((tvshows) => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
             this.setState({
                 tvshows,
                 page,
@@ -61,7 +74,10 @@ class TvShows extends Component {
     }
 
     async componentWillMount() {
+        UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
         await this.fecthTvShows(this.state.page).then((tvshows) => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
             this.setState({
                 tvshows,
                 loading: false
@@ -77,7 +93,8 @@ class TvShows extends Component {
                 handleLoadmore={this.handleLoadmore}
                 isRefreshing={this.state.isRefreshing}
                 navigate={this.props.navigation.navigate}
-                type='tv'/>
+                type='tv' 
+                hasMore={this.state.hasMore}/>
         );
     }
 }
